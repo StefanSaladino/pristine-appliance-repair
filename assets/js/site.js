@@ -5,16 +5,15 @@ const toggle = document.querySelector('[data-menu-toggle]');
 const mobileNav = document.querySelector('[data-mobile-nav]');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Add the real business phone number here before launch, in international format.
-// Example only: +14165551234
-const BUSINESS_PHONE = '';
+// Verified Pristine Appliance Repair business phone number.
+const BUSINESS_PHONE = '+16472739786';
 
 if (!reduceMotion && 'IntersectionObserver' in window) {
   root.classList.add('motion-ready');
 }
 
-// High-intent call controls fall back to the contact form until a verified
-// business phone number is supplied. No placeholder or fake number is shipped.
+// Every high-intent call control, including the mobile floating phone button,
+// uses the verified business number.
 const callLinks = [...document.querySelectorAll('[data-call-link]')];
 if (BUSINESS_PHONE) {
   callLinks.forEach((link) => {
