@@ -1,0 +1,26 @@
+# Pristine Appliance Repair
+
+Pristine Appliance Repair provides reliable in-home appliance repair services across Toronto and parts of the Greater Toronto Area. The current website focuses on dryer repair and dishwasher repair.
+
+## Core services
+
+- Dryer repair: https://pristineappliance.ca/dryer-repair.html
+  - Common issues: dryer won't heat; dryer won't spin; dryer takes too long to dry.
+- Dishwasher repair: https://pristineappliance.ca/dishwasher-repair.html
+  - Common issues: dishwasher leaks; dishwasher won't drain; dishes remain dirty; dishwasher won't start.
+
+## Service areas
+
+Mississauga, Vaughan, Etobicoke, Thornhill, Scarborough, North York, East York.
+
+## Contact
+
+The primary site action is Call Now. A verified business phone number must be configured before launch. Repair requests can also be submitted at https://pristineappliance.ca/contact.html.
+
+## Business positioning
+
+The business emphasizes honest service, clear communication, careful diagnosis, and dependable repairs that help customers get their appliances working properly again.
+
+## Important accuracy note
+
+This website does not currently publish unconfirmed phone numbers, prices, same-day guarantees, warranties, brand coverage, or arrival-time promises. Do not infer those details from the absence of information.
