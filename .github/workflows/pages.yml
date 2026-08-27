@@ -12,10 +12,10 @@ permissions:
 
 concurrency:
   group: github-pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
-  publish:
+  deploy:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -27,155 +27,76 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install image tooling
-        run: python -m pip install --disable-pip-version-check pillow
-
-      - name: Generate route-specific social cards
+      - name: Make site paths portable
         shell: bash
         run: |
           python <<'PY'
           from pathlib import Path
-          from PIL import Image, ImageDraw, ImageFont
 
           root = Path('.')
-          image_dir = root / 'assets' / 'images'
-          image_dir.mkdir(parents=True, exist_ok=True)
-          logo_path = image_dir / 'logo-mark-appliance.png'
 
-          cards = {
-              'index.html': ('og-home.png', 'Appliance Repair', 'Dryer & Dishwasher Repair · Toronto & GTA'),
-              'dryer-repair.html': ('og-dryer-repair.png', 'Dryer Repair', 'In-home repair · Toronto & GTA'),
-              'dishwasher-repair.html': ('og-dishwasher-repair.png', 'Dishwasher Repair', 'In-home repair · Toronto & GTA'),
-              'contact.html': ('og-contact.png', 'Contact Pristine', 'Appliance Repair · Toronto & GTA'),
-          }
-
-          bg = '#090b0d'
-          paper = '#f5f6f7'
-          muted = '#b6bcc4'
-          copper = '#b87333'
-          copper_light = '#d69a67'
-
-          bold = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
-          regular = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
-          title_font = ImageFont.truetype(bold, 78)
-          brand_font = ImageFont.truetype(bold, 30)
-          sub_font = ImageFont.truetype(regular, 31)
-          small_font = ImageFont.truetype(regular, 23)
-
-          logo = Image.open(logo_path).convert('RGBA')
-          logo.thumbnail((92, 118), Image.Resampling.LANCZOS)
-
-          for html_name, (filename, title, subtitle) in cards.items():
-              card = Image.new('RGB', (1200, 630), bg)
-              draw = ImageDraw.Draw(card)
-
-              draw.rectangle((0, 0, 18, 630), fill=copper)
-              draw.rectangle((74, 502, 1126, 504), fill=copper)
-              card.paste(logo, (78, 67), logo)
-
-              draw.text((194, 74), 'PRISTINE', font=brand_font, fill=paper)
-              draw.text((194, 113), 'APPLIANCE REPAIR', font=small_font, fill=copper_light)
-              draw.text((78, 244), title, font=title_font, fill=paper)
-              draw.text((82, 359), subtitle, font=sub_font, fill=muted)
-              draw.text((82, 535), 'pristineappliance.ca', font=small_font, fill=muted)
-
-              card.save(image_dir / filename, format='PNG', optimize=True)
-
-              page = root / html_name
+          for page in root.glob('*.html'):
               text = page.read_text(encoding='utf-8')
-              text = text.replace('og-pristine.png', filename)
-              marker = f'<meta property="og:image" content="https://pristineappliance.ca/assets/images/{filename}">'
-              secure = f'<meta property="og:image:secure_url" content="https://pristineappliance.ca/assets/images/{filename}">'
-              if marker in text and 'og:image:secure_url' not in text:
-                  text = text.replace(marker, marker + '\n  ' + secure, 1)
+
+              # Make same-directory pages and assets work both at a custom-domain
+              # root and under GitHub Pages' /pristine-appliance-repair/ subpath.
+              text = text.replace('href="/"', 'href="index.html"')
+              text = text.replace('href="/assets/', 'href="assets/')
+              text = text.replace('src="/assets/', 'src="assets/')
+              text = text.replace('href="/site.webmanifest"', 'href="site.webmanifest"')
+              text = text.replace('href="/dryer-repair.html', 'href="dryer-repair.html')
+              text = text.replace('href="/dishwasher-repair.html', 'href="dishwasher-repair.html')
+              text = text.replace('href="/contact.html', 'href="contact.html')
+              text = text.replace('action="/contact.html', 'action="contact.html')
+
               page.write_text(text, encoding='utf-8')
 
-          old = image_dir / 'og-pristine.png'
-          if old.exists():
-              old.unlink()
+          manifest = root / 'site.webmanifest'
+          if manifest.exists():
+              text = manifest.read_text(encoding='utf-8')
+              text = text.replace('"start_url": "/"', '"start_url": "./"')
+              text = text.replace('"src": "/assets/', '"src": "assets/')
+              manifest.write_text(text, encoding='utf-8')
+
+          # Fail the build if a local root-relative dependency sneaks through.
+          problems = []
+          for page in root.glob('*.html'):
+              for number, line in enumerate(page.read_text(encoding='utf-8').splitlines(), 1):
+                  if 'href="/' in line or 'src="/' in line or 'action="/' in line:
+                      problems.append(f'{page}:{number}: {line.strip()}')
+
+          if problems:
+              raise SystemExit('Root-relative local paths remain:\n' + '\n'.join(problems))
           PY
 
-      - name: Commit generated social-card layer
+      - name: Commit portable path fix
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html dryer-repair.html dishwasher-repair.html contact.html assets/images
+          git add index.html dryer-repair.html dishwasher-repair.html contact.html site.webmanifest
           if ! git diff --cached --quiet; then
-            git commit -m "feat: add route-specific social cards"
+            git commit -m "fix: make static asset paths GitHub Pages safe"
             git push origin HEAD:main
           fi
 
-      - name: Build GitHub Pages preview
+      - name: Build static Pages artifact
         shell: bash
         run: |
           rm -rf _site
           mkdir -p _site
           cp index.html dryer-repair.html dishwasher-repair.html contact.html robots.txt sitemap.xml llms.txt site.webmanifest _site/
           cp -R assets _site/assets
-
-          python <<'PY'
-          from pathlib import Path
-          base = '/pristine-appliance-repair/'
-          for path in Path('_site').glob('*.html'):
-              text = path.read_text(encoding='utf-8')
-              text = text.replace('href="/', f'href="{base}')
-              text = text.replace('src="/', f'src="{base}')
-              text = text.replace('action="/', f'action="{base}')
-              path.write_text(text, encoding='utf-8')
-
-          js = Path('_site/assets/js/site.js')
-          if js.exists():
-              text = js.read_text(encoding='utf-8')
-              text = text.replace("'/contact.html#request-form'", "'/pristine-appliance-repair/contact.html#request-form'")
-              text = text.replace('"/contact.html#request-form"', '"/pristine-appliance-repair/contact.html#request-form"')
-              js.write_text(text, encoding='utf-8')
-
-          manifest = Path('_site/site.webmanifest')
-          if manifest.exists():
-              text = manifest.read_text(encoding='utf-8')
-              text = text.replace('"/assets/', '"/pristine-appliance-repair/assets/')
-              text = text.replace('"start_url": "/"', '"start_url": "/pristine-appliance-repair/"')
-              manifest.write_text(text, encoding='utf-8')
-          PY
-
-      - name: Check Pages availability
-        id: pages
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          status=$(curl --silent --show-error --output /tmp/pages.json --write-out '%{http_code}' \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${GH_TOKEN}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages")
-
-          if [ "$status" = "200" ]; then
-            echo "enabled=true" >> "$GITHUB_OUTPUT"
-            echo "GitHub Pages is enabled. Continuing with deployment."
-          else
-            echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "GitHub Pages is not enabled yet (HTTP ${status})."
-            echo "Enable GitHub Pages once in Settings > Pages > Source: GitHub Actions, then the next push or manual workflow run will deploy automatically."
-          fi
+          touch _site/.nojekyll
 
       - name: Configure Pages
-        if: steps.pages.outputs.enabled == 'true'
         uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
-        if: steps.pages.outputs.enabled == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
       - name: Deploy to GitHub Pages
-        if: steps.pages.outputs.enabled == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
