@@ -1,13 +1,13 @@
 {
   "name": "Pristine Appliance Repair",
   "short_name": "Pristine Repair",
-  "start_url": "/",
+  "start_url": "./",
   "display": "browser",
   "background_color": "#090b0d",
   "theme_color": "#090b0d",
   "icons": [
     {
-      "src": "/assets/images/logo-mark-appliance.png",
+      "src": "assets/images/logo-mark-appliance.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any"
