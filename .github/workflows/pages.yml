@@ -27,7 +27,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Make site paths portable
+      - name: Normalize portable paths and mobile header CTA
         shell: bash
         run: |
           python <<'PY'
@@ -58,6 +58,16 @@ jobs:
               text = text.replace('"src": "/assets/', '"src": "assets/')
               manifest.write_text(text, encoding='utf-8')
 
+          # The header CTA stays in the markup for desktop. Give the mobile hide
+          # rule equal-or-greater specificity than the generic .button display
+          # rule so the standalone CTA cannot appear beside the burger on phones.
+          css = root / 'assets' / 'css' / 'site.css'
+          if css.exists():
+              text = css.read_text(encoding='utf-8')
+              text = text.replace('.header-cta { display: none; }', '.button.header-cta { display: none; }')
+              text = text.replace('  .header-cta { display: inline-flex; min-height: 42px; padding: .62rem .9rem; font-size: .82rem; }', '  .button.header-cta { display: inline-flex; min-height: 42px; padding: .62rem .9rem; font-size: .82rem; }')
+              css.write_text(text, encoding='utf-8')
+
           # Fail the build if a local root-relative dependency sneaks through.
           problems = []
           for page in root.glob('*.html'):
@@ -69,14 +79,14 @@ jobs:
               raise SystemExit('Root-relative local paths remain:\n' + '\n'.join(problems))
           PY
 
-      - name: Commit portable path fix
+      - name: Commit normalized source fixes
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html dryer-repair.html dishwasher-repair.html contact.html site.webmanifest
+          git add index.html dryer-repair.html dishwasher-repair.html contact.html site.webmanifest assets/css/site.css
           if ! git diff --cached --quiet; then
-            git commit -m "fix: make static asset paths GitHub Pages safe"
+            git commit -m "fix: hide standalone header CTA on mobile"
             git push origin HEAD:main
           fi
 
