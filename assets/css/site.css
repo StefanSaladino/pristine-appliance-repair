@@ -133,7 +133,7 @@ p { color: var(--muted); }
 .brand-copy span { margin-top: .22rem; color: var(--copper-light); font-size: .65rem; letter-spacing: .07em; }
 
 .nav-desktop { display: none; }
-.button.header-cta { display: none; }
+.button.button.header-cta { display: none; }
 .menu-toggle {
   width: 44px;
   height: 44px;
