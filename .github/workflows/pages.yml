@@ -46,6 +46,7 @@ jobs:
               text = text.replace('href="/site.webmanifest"', 'href="site.webmanifest"')
               text = text.replace('href="/dryer-repair.html', 'href="dryer-repair.html')
               text = text.replace('href="/dishwasher-repair.html', 'href="dishwasher-repair.html')
+              text = text.replace('href="/stove-repair.html', 'href="stove-repair.html')
               text = text.replace('href="/contact.html', 'href="contact.html')
               text = text.replace('action="/contact.html', 'action="contact.html')
 
@@ -84,9 +85,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html dryer-repair.html dishwasher-repair.html contact.html site.webmanifest assets/css/site.css
+          git add index.html dryer-repair.html dishwasher-repair.html stove-repair.html contact.html site.webmanifest assets/css/site.css
           if ! git diff --cached --quiet; then
-            git commit -m "fix: hide standalone header CTA on mobile"
+            git commit -m "fix: normalize Pages paths and mobile header CTA"
             git push origin HEAD:main
           fi
 
@@ -95,7 +96,7 @@ jobs:
         run: |
           rm -rf _site
           mkdir -p _site
-          cp index.html dryer-repair.html dishwasher-repair.html contact.html robots.txt sitemap.xml llms.txt site.webmanifest _site/
+          cp index.html dryer-repair.html dishwasher-repair.html stove-repair.html contact.html robots.txt sitemap.xml llms.txt site.webmanifest _site/
           cp -R assets _site/assets
           touch _site/.nojekyll
 

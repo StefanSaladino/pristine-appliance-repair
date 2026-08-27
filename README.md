@@ -1,12 +1,13 @@
-# Pristine Appliance Repair — Redesign Draft 3
+# Pristine Appliance Repair — Redesign V3.2
 
 A mobile-first static redesign for Pristine Appliance Repair.
 
 ## Routes
 
 - `/` — Home
-- `/dryer-repair.html` — Dryer Repair
+- `/dryer-repair.html` — Washer & Dryer Repair
 - `/dishwasher-repair.html` — Dishwasher Repair
+- `/stove-repair.html` — Stove Repair
 - `/contact.html` — Contact / repair request form
 
 ## Design direction
@@ -21,13 +22,7 @@ A mobile-first static redesign for Pristine Appliance Repair.
 
 ## High-intent phone CTA
 
-`Call Now` is the primary action throughout the site. Every call control is marked with `data-call-link` and is wired through one verified value in `assets/js/site.js`:
-
-```js
-const BUSINESS_PHONE = '';
-```
-
-Before launch, set that constant to the real business phone number in international format, for example `+14165551234`. Until a verified number is supplied, the controls safely fall back to the repair-request form. No placeholder or fabricated phone number is shipped.
+`Call Now` remains the primary action throughout the site. Every call control is marked with `data-call-link`. The current `main` branch already wires those controls through the verified business number in `assets/js/site.js`, and this V3.2 overlay leaves that phone configuration untouched.
 
 ## Responsive / visual contract
 
@@ -51,18 +46,33 @@ Before launch, set that constant to the real business phone number in internatio
 
 ## Contact form
 
-The form is configured for Netlify Forms using `data-netlify="true"`. It redirects back to the contact page with a local success state, so no fifth routed page is required.
+The form is configured for Netlify Forms using `data-netlify="true"`. It redirects back to the contact page with a local success state, so no separate thank-you route is required.
 
 ## Photography
 
 The site uses clean real residential photography served responsively from Unsplash. The images are intentionally appliance/interior focused rather than using stock models presented as Pristine technicians.
 
 - Homepage hero — Lisa Anna: https://unsplash.com/photos/a-laundry-room-with-a-washer-and-dryer-49NwSDtEsuw
+- Washer / laundry image — Lisa Anna: https://unsplash.com/photos/a-laundry-room-with-a-washer-and-dryer-rdRMAW3qTo8
 - Dryer / laundry image — Alex Tyson: https://unsplash.com/photos/a-laundry-room-with-a-washer-and-dryer-RoY_VRBcZxo
 - Dishwasher / kitchen image — Alex Tyson: https://unsplash.com/photos/a-kitchen-with-a-stove-dishwasher-and-sink-ewDVicUjeCQ
+- Stove / kitchen image — Alex Tyson: https://unsplash.com/photos/a-kitchen-with-a-stove-top-oven-next-to-a-refrigerator-D0ixlSmCWQQ
 
 The source pages identify these photos as free to use under the Unsplash License. Image requests use the Unsplash responsive image CDN with width-specific `srcset` values.
 
 ## Before production launch
 
-Confirm the final domain and add the verified business phone number. Also confirm any business hours, service guarantees, supported brands, pricing/service-call policy, and real customer reviews before adding those claims to visible copy or structured data.
+Confirm the final domain. Also confirm any business hours, service guarantees, supported brands, pricing/service-call policy, and real customer reviews before adding those claims to visible copy or structured data.
+
+
+## Social preview cards
+
+Each public route has a dedicated **1200 × 630 PNG** social preview image, sized for Open Graph previews and X/Twitter `summary_large_image` cards:
+
+- `/assets/images/og-home.png` — Home
+- `/assets/images/og-dryer-repair.png` — Washer & Dryer Repair
+- `/assets/images/og-stove-repair.png` — Stove Repair
+- `/assets/images/og-dishwasher-repair.png` — Dishwasher Repair
+- `/assets/images/og-contact.png` — Contact
+
+Each page includes page-specific `og:image`, `og:image:secure_url`, `og:image:type`, `og:image:width`, `og:image:height`, `og:image:alt`, `twitter:image`, and `twitter:image:alt` metadata. No social account handles are declared because none have been verified.

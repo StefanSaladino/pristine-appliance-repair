@@ -1,13 +1,16 @@
 # Pristine Appliance Repair
 
-Pristine Appliance Repair provides reliable in-home appliance repair services across Toronto and parts of the Greater Toronto Area. The current website focuses on dryer repair and dishwasher repair.
+Pristine Appliance Repair provides reliable in-home appliance repair services across Toronto and parts of the Greater Toronto Area. The current website focuses on washer repair, dryer repair, dishwasher repair, and stove repair.
 
 ## Core services
 
-- Dryer repair: https://pristineappliance.ca/dryer-repair.html
-  - Common issues: dryer won't heat; dryer won't spin; dryer takes too long to dry.
+- Washer and dryer repair: https://pristineappliance.ca/dryer-repair.html
+  - Washer issues: washer won't drain; washer won't spin; washer leaks; washer won't start.
+  - Dryer issues: dryer won't heat; dryer won't spin; dryer takes too long to dry.
 - Dishwasher repair: https://pristineappliance.ca/dishwasher-repair.html
   - Common issues: dishwasher leaks; dishwasher won't drain; dishes remain dirty; dishwasher won't start.
+- Stove repair: https://pristineappliance.ca/stove-repair.html
+  - Common issues: burner won't heat properly; inconsistent heat; temperature problems; controls not responding as expected.
 
 ## Service areas
 
@@ -15,7 +18,7 @@ Mississauga, Vaughan, Etobicoke, Thornhill, Scarborough, North York, East York.
 
 ## Contact
 
-The primary site action is Call Now. A verified business phone number must be configured before launch. Repair requests can also be submitted at https://pristineappliance.ca/contact.html.
+The primary site action is Call Now using the verified business phone configuration. Repair requests can also be submitted at https://pristineappliance.ca/contact.html.
 
 ## Business positioning
 
@@ -23,4 +26,4 @@ The business emphasizes honest service, clear communication, careful diagnosis, 
 
 ## Important accuracy note
 
-This website does not currently publish unconfirmed phone numbers, prices, same-day guarantees, warranties, brand coverage, or arrival-time promises. Do not infer those details from the absence of information.
+This website does not publish unconfirmed prices, same-day guarantees, warranties, brand coverage, or arrival-time promises. Do not infer those details from the absence of information.

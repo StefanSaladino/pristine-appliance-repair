@@ -321,8 +321,10 @@ p { color: var(--muted); }
   transition: transform .8s cubic-bezier(.22,1,.36,1), filter .4s ease;
 }
 .service-media:hover img { transform: scale(1.018); }
+.photo-washer { object-position: center center; }
 .photo-dryer { object-position: center center; }
 .photo-dishwasher { object-position: center center; }
+.photo-stove { object-position: center center; }
 .service-copy { min-width: 0; max-width: 36rem; }
 .service-number {
   margin-bottom: 1.2rem;
@@ -580,11 +582,11 @@ textarea.input { min-height: 150px; resize: vertical; }
   .header-row { min-height: 78px; }
   .brand img { width: 42px; height: 52px; }
   .menu-toggle, .mobile-nav, .mobile-call-fab { display: none; }
-  .nav-desktop { display: flex; align-items: center; gap: clamp(1rem, 2vw, 1.65rem); }
+  .nav-desktop { display: flex; align-items: center; gap: clamp(.75rem, 1.55vw, 1.35rem); }
   .nav-desktop a {
     position: relative;
     color: var(--muted);
-    font-size: .86rem;
+    font-size: .82rem;
     font-weight: 650;
     text-decoration: none;
   }
