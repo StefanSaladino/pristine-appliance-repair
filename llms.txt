@@ -27,3 +27,9 @@ The business emphasizes honest service, clear communication, careful diagnosis, 
 ## Important accuracy note
 
 This website does not publish unconfirmed prices, same-day guarantees, warranties, brand coverage, or arrival-time promises. Do not infer those details from the absence of information.
+
+## Privacy
+
+Privacy policy: https://pristineappliance.ca/privacy.html
+
+The site includes consent controls for optional analytics and advertising technologies. Google Consent Mode v2-compatible defaults keep analytics and advertising consent denied until the visitor makes a choice.
