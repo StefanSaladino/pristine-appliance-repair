@@ -1,4 +1,4 @@
-# Pristine Appliance Repair — Redesign V3.2
+# Pristine Appliance Repair — Redesign V3.3
 
 A mobile-first static redesign for Pristine Appliance Repair.
 
@@ -9,6 +9,7 @@ A mobile-first static redesign for Pristine Appliance Repair.
 - `/dishwasher-repair.html` — Dishwasher Repair
 - `/stove-repair.html` — Stove Repair
 - `/contact.html` — Contact / repair request form
+- `/privacy.html` — Privacy policy and consent controls
 
 ## Design direction
 
@@ -22,7 +23,7 @@ A mobile-first static redesign for Pristine Appliance Repair.
 
 ## High-intent phone CTA
 
-`Call Now` remains the primary action throughout the site. Every call control is marked with `data-call-link`. The current `main` branch already wires those controls through the verified business number in `assets/js/site.js`, and this V3.2 overlay leaves that phone configuration untouched.
+`Call Now` remains the primary action throughout the site. Every call control is marked with `data-call-link`. The current `main` branch wires those controls through the verified business number in `assets/js/site.js`, and the V3.3 privacy update leaves that phone configuration untouched.
 
 ## Responsive / visual contract
 
@@ -64,7 +65,6 @@ The source pages identify these photos as free to use under the Unsplash License
 
 Confirm the final domain. Also confirm any business hours, service guarantees, supported brands, pricing/service-call policy, and real customer reviews before adding those claims to visible copy or structured data.
 
-
 ## Social preview cards
 
 Each public route has a dedicated **1200 × 630 PNG** social preview image, sized for Open Graph previews and X/Twitter `summary_large_image` cards:
@@ -76,3 +76,12 @@ Each public route has a dedicated **1200 × 630 PNG** social preview image, size
 - `/assets/images/og-contact.png` — Contact
 
 Each page includes page-specific `og:image`, `og:image:secure_url`, `og:image:type`, `og:image:width`, `og:image:height`, `og:image:alt`, `twitter:image`, and `twitter:image:alt` metadata. No social account handles are declared because none have been verified.
+
+## Privacy and consent
+
+- `/privacy.html` explains repair-request data, website/device information, Google Analytics, Google Ads, cookies/local storage, service providers, retention, and privacy choices.
+- `assets/js/consent.js` sets conservative Google Consent Mode v2 defaults before any future Google tag: `analytics_storage`, `ad_storage`, `ad_user_data`, and `ad_personalization` default to `denied`.
+- Visitors can Accept all, Reject non-essential, or separately choose Analytics and Advertising.
+- Choices are stored in `localStorage` under `pristine-consent-v1` and can be reopened using the footer’s Cookie Settings control.
+- Keep `assets/js/consent.js` before any future Google Analytics, Google Ads, or Google Tag Manager snippet in `<head>`.
+- The consent UI is not a substitute for legal review. Confirm the final data flows, Google tag configuration, retention settings, and business contact/privacy details before production advertising begins.
