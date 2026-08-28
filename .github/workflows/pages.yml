@@ -32,6 +32,7 @@ jobs:
         run: |
           python <<'PY'
           from pathlib import Path
+          import re
 
           root = Path('.')
 
@@ -50,6 +51,39 @@ jobs:
               text = text.replace('href="/contact.html', 'href="contact.html')
               text = text.replace('href="/privacy.html', 'href="privacy.html')
               text = text.replace('action="/contact.html', 'action="contact.html')
+
+              # Keep the privacy/consent layer on every public HTML route.
+              if 'assets/css/privacy.css' not in text:
+                  text = text.replace(
+                      '<link rel="stylesheet" href="assets/css/site.css">',
+                      '<link rel="stylesheet" href="assets/css/site.css">\n  <link rel="stylesheet" href="assets/css/privacy.css">'
+                  )
+              if 'assets/js/consent.js' not in text:
+                  text = text.replace(
+                      '<script src="assets/js/site.js" defer></script>',
+                      '<script src="assets/js/consent.js"></script>\n  <script src="assets/js/site.js" defer></script>'
+                  )
+
+              def add_footer_privacy(match):
+                  opening, inner, closing = match.groups()
+                  if 'href="privacy.html"' not in inner:
+                      inner += '<a href="privacy.html">Privacy</a>'
+                  if 'data-consent-settings' not in inner:
+                      inner += '<button class="footer-link-button" type="button" data-consent-settings>Cookie Settings</button>'
+                  return opening + inner + closing
+
+              text = re.sub(
+                  r'(<nav class="footer-nav" aria-label="Footer navigation">)(.*?)(</nav>)',
+                  add_footer_privacy,
+                  text,
+                  flags=re.S
+              )
+
+              if page.name == 'contact.html':
+                  text = text.replace(
+                      '<p class="form-note">Please do not include passwords, payment details, or other sensitive information in this form.</p>',
+                      '<p class="form-note">We use the details you provide to respond to your repair request. Please do not include passwords, payment details, or other sensitive information. See our <a href="privacy.html">Privacy Policy</a>.</p>'
+                  )
 
               page.write_text(text, encoding='utf-8')
 
@@ -88,7 +122,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html dryer-repair.html dishwasher-repair.html stove-repair.html contact.html privacy.html site.webmanifest assets/css/site.css
+          git add *.html site.webmanifest assets/css/site.css
           if ! git diff --cached --quiet; then
             git commit -m "fix: normalize Pages paths and mobile header CTA"
             git push origin HEAD:main
